@@ -1,0 +1,1096 @@
+
+<style>
+  h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+  *{box-sizing:border-box;}
+  .wrap{padding:1rem 0;font-family:var(--font-sans);}
+  .cat-tabs{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;}
+  .cat-tab{padding:6px 16px;border-radius:99px;font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);}
+  .cat-tab.active-cr{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC;}
+  .cat-tab.active-st{background:#E1F5EE;color:#085041;border-color:#5DCAA5;}
+  .cat-tab.active-bh{background:#FAEEDA;color:#633806;border-color:#EF9F27;}
+  .pattern-list{display:flex;flex-direction:column;gap:12px;}
+  .p-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;}
+  .p-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;}
+  .p-header:hover{background:var(--color-background-secondary);}
+  .p-title{font-size:14px;font-weight:500;color:var(--color-text-primary);}
+  .p-badge{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:500;}
+  .b-cr{background:#EEEDFE;color:#3C3489;}
+  .b-st{background:#E1F5EE;color:#085041;}
+  .b-bh{background:#FAEEDA;color:#633806;}
+  .p-body{display:none;border-top:0.5px solid var(--color-border-tertiary);padding:0;}
+  .p-body.open{display:block;}
+  .intent-line{padding:10px 16px 6px;font-size:12.5px;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary);}
+  pre{margin:0;padding:14px 16px;font-size:12px;line-height:1.6;overflow-x:auto;background:var(--color-background-secondary);color:var(--color-text-primary);font-family:var(--font-mono);}
+  .chevron{font-size:16px;color:var(--color-text-tertiary);transition:transform 0.2s;}
+  .chevron.open{transform:rotate(180deg);}
+</style>
+<div class="wrap">
+<h2 class="sr-only">Interactive code examples for all 23 design patterns, grouped by category</h2>
+
+<div class="cat-tabs">
+  <button class="cat-tab active-cr" onclick="showCat('cr',this)">Creational (5)</button>
+  <button class="cat-tab" onclick="showCat('st',this)">Structural (7)</button>
+  <button class="cat-tab" onclick="showCat('bh',this)">Behavioral (11)</button>
+</div>
+
+<div id="cat-cr" class="pattern-list">
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Singleton</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-cr">Creational</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Only one instance — global access point</div>
+    <pre>class DatabaseConnection {
+    private static DatabaseConnection instance;
+    private String url;
+
+    private DatabaseConnection() {
+        this.url = "jdbc:mysql://localhost/mydb";
+        System.out.println("DB connected to: " + url);
+    }
+
+    public static DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
+    public void query(String sql) {
+        System.out.println("Running: " + sql);
+    }
+}
+
+// Usage
+DatabaseConnection db1 = DatabaseConnection.getInstance();
+DatabaseConnection db2 = DatabaseConnection.getInstance();
+System.out.println(db1 == db2); // true — same instance</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Prototype</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-cr">Creational</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Clone existing objects instead of creating from scratch</div>
+    <pre>class GameCharacter implements Cloneable {
+    String name;
+    int health;
+    String weapon;
+
+    public GameCharacter(String name, int health, String weapon) {
+        this.name = name;
+        this.health = health;
+        this.weapon = weapon;
+    }
+
+    @Override
+    public GameCharacter clone() {
+        try {
+            return (GameCharacter) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+    }
+}
+
+// Usage
+GameCharacter original = new GameCharacter("Warrior", 100, "Sword");
+GameCharacter copy = original.clone();
+copy.name = "Warrior2";
+// original.name is still "Warrior"</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Builder</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-cr">Creational</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Build complex objects step by step using .withX().build()</div>
+    <pre>class Burger {
+    String bun, patty, sauce;
+    boolean cheese, lettuce;
+
+    private Burger() {}
+
+    static class Builder {
+        private Burger burger = new Burger();
+
+        public Builder withBun(String bun) {
+            burger.bun = bun; return this;
+        }
+        public Builder withPatty(String patty) {
+            burger.patty = patty; return this;
+        }
+        public Builder withSauce(String sauce) {
+            burger.sauce = sauce; return this;
+        }
+        public Builder withCheese() {
+            burger.cheese = true; return this;
+        }
+        public Builder withLettuce() {
+            burger.lettuce = true; return this;
+        }
+        public Burger build() { return burger; }
+    }
+}
+
+// Usage
+Burger b = new Burger.Builder()
+    .withBun("sesame")
+    .withPatty("beef")
+    .withCheese()
+    .withSauce("bbq")
+    .build();</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Factory Method</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-cr">Creational</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Subclasses decide which concrete type to instantiate</div>
+    <pre>interface Transport {
+    void deliver();
+}
+class Truck implements Transport {
+    public void deliver() {
+        System.out.println("Delivering by road");
+    }
+}
+class Ship implements Transport {
+    public void deliver() {
+        System.out.println("Delivering by sea");
+    }
+}
+
+abstract class Logistics {
+    public abstract Transport createTransport();
+
+    public void planDelivery() {
+        Transport t = createTransport();
+        t.deliver();
+    }
+}
+class RoadLogistics extends Logistics {
+    public Transport createTransport() { return new Truck(); }
+}
+class SeaLogistics extends Logistics {
+    public Transport createTransport() { return new Ship(); }
+}
+
+// Usage
+Logistics logistics = new RoadLogistics();
+logistics.planDelivery(); // Delivering by road</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Abstract Factory</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-cr">Creational</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Produce families of related objects without specifying concrete classes</div>
+    <pre>interface Button { void render(); }
+interface Checkbox { void render(); }
+
+class WindowsButton implements Button {
+    public void render() { System.out.println("Windows Button"); }
+}
+class MacButton implements Button {
+    public void render() { System.out.println("Mac Button"); }
+}
+class WindowsCheckbox implements Checkbox {
+    public void render() { System.out.println("Windows Checkbox"); }
+}
+class MacCheckbox implements Checkbox {
+    public void render() { System.out.println("Mac Checkbox"); }
+}
+
+interface UIFactory {
+    Button createButton();
+    Checkbox createCheckbox();
+}
+class WindowsFactory implements UIFactory {
+    public Button createButton() { return new WindowsButton(); }
+    public Checkbox createCheckbox() { return new WindowsCheckbox(); }
+}
+class MacFactory implements UIFactory {
+    public Button createButton() { return new MacButton(); }
+    public Checkbox createCheckbox() { return new MacCheckbox(); }
+}
+
+// Usage — swap factory = swap entire UI kit
+UIFactory factory = new MacFactory();
+factory.createButton().render();   // Mac Button
+factory.createCheckbox().render(); // Mac Checkbox</pre>
+  </div>
+</div>
+
+</div>
+
+<div id="cat-st" class="pattern-list" style="display:none;">
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Adapter</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-st">Structural</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Make incompatible interfaces work together via a wrapper</div>
+    <pre>// Target interface (what client expects)
+interface FajrTimeCity {
+    String getFajrTime(String cityName);
+}
+
+// Adaptee (incompatible existing class)
+class FajrTimeGeo {
+    public String getFajrTime(double lat, double lon) {
+        return "Fajr time is 5:39 AM";
+    }
+}
+
+// Adapter — bridges the gap
+class FajrTimeAdapter implements FajrTimeCity {
+    private FajrTimeGeo geo;
+
+    public FajrTimeAdapter(FajrTimeGeo geo) {
+        this.geo = geo;
+    }
+
+    @Override
+    public String getFajrTime(String cityName) {
+        double lat = getLatitude(cityName);
+        double lon = getLongitude(cityName);
+        return geo.getFajrTime(lat, lon);
+    }
+
+    private double getLatitude(String city) { return 21.5433; }
+    private double getLongitude(String city) { return 39.1728; }
+}
+
+// Usage — client only knows FajrTimeCity
+FajrTimeCity service = new FajrTimeAdapter(new FajrTimeGeo());
+System.out.println(service.getFajrTime("Jeddah"));</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Bridge</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-st">Structural</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Separate abstraction from implementation so both can vary independently</div>
+    <pre>// Implementation interface
+interface Color {
+    String fill();
+}
+class Red implements Color {
+    public String fill() { return "red"; }
+}
+class Blue implements Color {
+    public String fill() { return "blue"; }
+}
+
+// Abstraction holds reference to implementation
+abstract class Shape {
+    protected Color color;
+    public Shape(Color color) { this.color = color; }
+    public abstract void draw();
+}
+class Circle extends Shape {
+    public Circle(Color color) { super(color); }
+    public void draw() {
+        System.out.println("Circle filled with " + color.fill());
+    }
+}
+class Square extends Shape {
+    public Square(Color color) { super(color); }
+    public void draw() {
+        System.out.println("Square filled with " + color.fill());
+    }
+}
+
+// Usage — mix independently
+Shape s1 = new Circle(new Red());
+Shape s2 = new Square(new Blue());
+s1.draw(); // Circle filled with red
+s2.draw(); // Square filled with blue</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Composite</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-st">Structural</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Treat individual objects and groups uniformly via tree structure</div>
+    <pre>interface FileSystemItem {
+    int getSize();
+    void print(String indent);
+}
+
+class File implements FileSystemItem {
+    private String name;
+    private int size;
+    public File(String name, int size) {
+        this.name = name; this.size = size;
+    }
+    public int getSize() { return size; }
+    public void print(String indent) {
+        System.out.println(indent + name + " (" + size + "kb)");
+    }
+}
+
+class Folder implements FileSystemItem {
+    private String name;
+    private List&lt;FileSystemItem&gt; children = new ArrayList&lt;&gt;();
+    public Folder(String name) { this.name = name; }
+    public void add(FileSystemItem item) { children.add(item); }
+    public int getSize() {
+        return children.stream().mapToInt(FileSystemItem::getSize).sum();
+    }
+    public void print(String indent) {
+        System.out.println(indent + name + "/");
+        for (FileSystemItem c : children) c.print(indent + "  ");
+    }
+}
+
+// Usage
+Folder root = new Folder("root");
+root.add(new File("readme.txt", 5));
+Folder src = new Folder("src");
+src.add(new File("Main.java", 20));
+root.add(src);
+root.print("");   // root/ > readme.txt > src/ > Main.java
+System.out.println(root.getSize()); // 25</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Decorator</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-st">Structural</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Add behavior to objects dynamically by wrapping them</div>
+    <pre>interface Coffee {
+    String getDescription();
+    double getCost();
+}
+
+class SimpleCoffee implements Coffee {
+    public String getDescription() { return "Coffee"; }
+    public double getCost() { return 1.0; }
+}
+
+// Base decorator
+abstract class CoffeeDecorator implements Coffee {
+    protected Coffee coffee;
+    public CoffeeDecorator(Coffee coffee) { this.coffee = coffee; }
+}
+
+class MilkDecorator extends CoffeeDecorator {
+    public MilkDecorator(Coffee coffee) { super(coffee); }
+    public String getDescription() {
+        return coffee.getDescription() + ", Milk";
+    }
+    public double getCost() { return coffee.getCost() + 0.5; }
+}
+
+class SugarDecorator extends CoffeeDecorator {
+    public SugarDecorator(Coffee coffee) { super(coffee); }
+    public String getDescription() {
+        return coffee.getDescription() + ", Sugar";
+    }
+    public double getCost() { return coffee.getCost() + 0.25; }
+}
+
+// Usage — stack decorators
+Coffee c = new SimpleCoffee();
+c = new MilkDecorator(c);
+c = new SugarDecorator(c);
+System.out.println(c.getDescription()); // Coffee, Milk, Sugar
+System.out.println(c.getCost());        // 1.75</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Facade</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-st">Structural</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">One simple interface to a complex subsystem</div>
+    <pre>class TV {
+    public void on() { System.out.println("TV on"); }
+    public void setInput(String s) { System.out.println("Input: " + s); }
+}
+class SoundSystem {
+    public void on() { System.out.println("Sound on"); }
+    public void setVolume(int v) { System.out.println("Volume: " + v); }
+}
+class Lights {
+    public void dim(int level) { System.out.println("Lights at " + level + "%"); }
+}
+
+// Facade hides all complexity
+class HomeTheaterFacade {
+    private TV tv;
+    private SoundSystem sound;
+    private Lights lights;
+
+    public HomeTheaterFacade() {
+        tv = new TV();
+        sound = new SoundSystem();
+        lights = new Lights();
+    }
+
+    public void watchMovie() {
+        lights.dim(20);
+        tv.on();
+        tv.setInput("HDMI");
+        sound.on();
+        sound.setVolume(30);
+        System.out.println("Enjoy the movie!");
+    }
+}
+
+// Usage — one method replaces many calls
+HomeTheaterFacade theater = new HomeTheaterFacade();
+theater.watchMovie();</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Flyweight</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-st">Structural</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Share intrinsic state across thousands of objects to save memory</div>
+    <pre>// Flyweight — holds shared (intrinsic) state
+class TreeType {
+    String name, texture;
+    public TreeType(String name, String texture) {
+        this.name = name; this.texture = texture;
+    }
+    public void draw(int x, int y) {
+        System.out.println("Drawing " + name + " at (" + x + "," + y + ")");
+    }
+}
+
+// Factory — returns shared flyweights
+class TreeFactory {
+    private static Map&lt;String, TreeType&gt; types = new HashMap&lt;&gt;();
+
+    public static TreeType getTreeType(String name, String texture) {
+        return types.computeIfAbsent(name, k -> new TreeType(name, texture));
+    }
+}
+
+// Context — holds unique (extrinsic) state
+class Tree {
+    int x, y;
+    TreeType type;
+    public Tree(int x, int y, String name, String texture) {
+        this.x = x; this.y = y;
+        this.type = TreeFactory.getTreeType(name, texture);
+    }
+    public void draw() { type.draw(x, y); }
+}
+
+// Usage — 1 million trees, only 2 TreeType objects
+Tree t1 = new Tree(10, 20, "Oak", "oak_texture");
+Tree t2 = new Tree(50, 60, "Oak", "oak_texture"); // reuses same TreeType
+Tree t3 = new Tree(15, 25, "Pine", "pine_texture");</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Proxy</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-st">Structural</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Substitute that controls access — validates, lazy-loads, or caches</div>
+    <pre>interface SpeechToTextService {
+    String convertSpeechToText(String audioFile);
+}
+
+class RealSpeechToText implements SpeechToTextService {
+    public RealSpeechToText() {
+        System.out.println("Loading heavy speech model...");
+    }
+    public String convertSpeechToText(String audioFile) {
+        return "Transcription of: " + audioFile;
+    }
+}
+
+// Protection Proxy — validates API key before delegating
+class SpeechToTextProxy implements SpeechToTextService {
+    private RealSpeechToText real;
+    private String apiKey;
+
+    public SpeechToTextProxy(String apiKey) {
+        this.apiKey = apiKey;
+        // real service NOT created yet (lazy)
+    }
+
+    private boolean isValid() {
+        return apiKey != null && !apiKey.isEmpty();
+    }
+
+    public String convertSpeechToText(String audioFile) {
+        if (!isValid()) {
+            return "Access denied: invalid API key";
+        }
+        if (real == null) real = new RealSpeechToText(); // lazy init
+        return real.convertSpeechToText(audioFile);
+    }
+}
+
+// Usage
+SpeechToTextService s = new SpeechToTextProxy("my-secret-key");
+System.out.println(s.convertSpeechToText("audio.mp3"));</pre>
+  </div>
+</div>
+
+</div>
+
+<div id="cat-bh" class="pattern-list" style="display:none;">
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Chain of Responsibility</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Pass request along a chain — each handler processes or forwards</div>
+    <pre>abstract class SupportHandler {
+    protected SupportHandler next;
+    public void setNext(SupportHandler next) { this.next = next; }
+    public abstract void handle(int level);
+}
+
+class Level1 extends SupportHandler {
+    public void handle(int level) {
+        if (level == 1) System.out.println("Level1 handled ticket");
+        else if (next != null) next.handle(level);
+    }
+}
+class Level2 extends SupportHandler {
+    public void handle(int level) {
+        if (level == 2) System.out.println("Level2 handled ticket");
+        else if (next != null) next.handle(level);
+    }
+}
+class Level3 extends SupportHandler {
+    public void handle(int level) {
+        System.out.println("Level3 (manager) handled ticket");
+    }
+}
+
+// Usage — build chain
+Level1 l1 = new Level1();
+Level2 l2 = new Level2();
+Level3 l3 = new Level3();
+l1.setNext(l2); l2.setNext(l3);
+
+l1.handle(2); // Level2 handled ticket
+l1.handle(3); // Level3 handled ticket</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Command</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Encapsulate request as object — enables undo, queue, log</div>
+    <pre>interface Command {
+    void execute();
+    void undo();
+}
+
+class TextEditor {
+    private StringBuilder text = new StringBuilder();
+    public void write(String s) { text.append(s); }
+    public void deleteLast(int n) {
+        text.delete(text.length() - n, text.length());
+    }
+    public String getText() { return text.toString(); }
+}
+
+class WriteCommand implements Command {
+    private TextEditor editor;
+    private String text;
+    public WriteCommand(TextEditor e, String t) { editor=e; text=t; }
+    public void execute() { editor.write(text); }
+    public void undo() { editor.deleteLast(text.length()); }
+}
+
+// Invoker — holds history for undo
+class EditorInvoker {
+    private Stack&lt;Command&gt; history = new Stack&lt;&gt;();
+    public void run(Command cmd) { cmd.execute(); history.push(cmd); }
+    public void undo() { if (!history.isEmpty()) history.pop().undo(); }
+}
+
+// Usage
+TextEditor editor = new TextEditor();
+EditorInvoker invoker = new EditorInvoker();
+invoker.run(new WriteCommand(editor, "Hello "));
+invoker.run(new WriteCommand(editor, "World"));
+System.out.println(editor.getText()); // Hello World
+invoker.undo();
+System.out.println(editor.getText()); // Hello</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Interpreter</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Define grammar and interpret sentences in a language</div>
+    <pre>// Simple math expression interpreter: e.g. "3 + 5"
+interface Expression {
+    int interpret();
+}
+
+class NumberExpr implements Expression {
+    private int number;
+    public NumberExpr(int n) { this.number = n; }
+    public int interpret() { return number; }
+}
+
+class AddExpr implements Expression {
+    private Expression left, right;
+    public AddExpr(Expression l, Expression r) { left=l; right=r; }
+    public int interpret() { return left.interpret() + right.interpret(); }
+}
+
+class SubtractExpr implements Expression {
+    private Expression left, right;
+    public SubtractExpr(Expression l, Expression r) { left=l; right=r; }
+    public int interpret() { return left.interpret() - right.interpret(); }
+}
+
+// Usage — interpret "10 + 3 - 2"
+Expression expr = new SubtractExpr(
+    new AddExpr(new NumberExpr(10), new NumberExpr(3)),
+    new NumberExpr(2)
+);
+System.out.println(expr.interpret()); // 11</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Iterator</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Traverse a collection without exposing its internal structure</div>
+    <pre>interface Iterator&lt;T&gt; {
+    boolean hasNext();
+    T next();
+}
+
+class StudentArray {
+    private String[] students;
+    private int size = 0;
+
+    public StudentArray(int capacity) {
+        students = new String[capacity];
+    }
+    public void add(String s) { students[size++] = s; }
+
+    public Iterator&lt;String&gt; iterator() {
+        return new Iterator&lt;String&gt;() {
+            int index = 0;
+            public boolean hasNext() { return index &lt; size; }
+            public String next() { return students[index++]; }
+        };
+    }
+}
+
+// Usage — uniform traversal regardless of structure
+StudentArray arr = new StudentArray(10);
+arr.add("Ali"); arr.add("Sara"); arr.add("Omar");
+
+Iterator&lt;String&gt; it = arr.iterator();
+while (it.hasNext()) {
+    System.out.println(it.next());
+}</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Mediator</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Central hub — objects communicate through mediator, not directly</div>
+    <pre>interface ChatMediator {
+    void sendMessage(String msg, User sender);
+}
+
+class ChatRoom implements ChatMediator {
+    private List&lt;User&gt; users = new ArrayList&lt;&gt;();
+    public void addUser(User u) { users.add(u); }
+    public void sendMessage(String msg, User sender) {
+        for (User u : users) {
+            if (u != sender) u.receive(sender.name + ": " + msg);
+        }
+    }
+}
+
+class User {
+    String name;
+    private ChatMediator mediator;
+    public User(String name, ChatMediator m) {
+        this.name = name; this.mediator = m;
+    }
+    public void send(String msg) { mediator.sendMessage(msg, this); }
+    public void receive(String msg) { System.out.println(name + " received: " + msg); }
+}
+
+// Usage — no user knows about other users directly
+ChatRoom room = new ChatRoom();
+User ali = new User("Ali", room);
+User sara = new User("Sara", room);
+room.addUser(ali); room.addUser(sara);
+ali.send("Hello!"); // Sara received: Ali: Hello!</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Memento</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Save and restore object state without exposing internals</div>
+    <pre>// Memento — stores snapshot
+class EditorMemento {
+    private final String text;
+    public EditorMemento(String text) { this.text = text; }
+    public String getText() { return text; }
+}
+
+// Originator — creates and restores from mementos
+class Editor {
+    private String text = "";
+    public void type(String s) { text += s; }
+    public EditorMemento save() { return new EditorMemento(text); }
+    public void restore(EditorMemento m) { text = m.getText(); }
+    public String getText() { return text; }
+}
+
+// Caretaker — manages history
+class History {
+    private Stack&lt;EditorMemento&gt; stack = new Stack&lt;&gt;();
+    public void push(EditorMemento m) { stack.push(m); }
+    public EditorMemento pop() { return stack.pop(); }
+}
+
+// Usage
+Editor editor = new Editor();
+History history = new History();
+
+editor.type("Hello ");
+history.push(editor.save()); // checkpoint
+editor.type("World");
+System.out.println(editor.getText()); // Hello World
+editor.restore(history.pop());
+System.out.println(editor.getText()); // Hello</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Observer</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">One-to-many: subject notifies all observers on state change</div>
+    <pre>interface Observer { void update(Player player); }
+
+interface Subject {
+    void attach(Observer o);
+    void detach(Observer o);
+    void notifyObservers();
+}
+
+class Player implements Subject {
+    private String name;
+    private int currentPoints;
+    private double sessionAvg;
+    private List&lt;Observer&gt; observers = new ArrayList&lt;&gt;();
+
+    public Player(String name) { this.name = name; }
+
+    public void attach(Observer o) { observers.add(o); }
+    public void detach(Observer o) { observers.remove(o); }
+    public void notifyObservers() {
+        for (Observer o : observers) o.update(this);
+    }
+
+    public void setCurrentPoints(int pts) {
+        this.currentPoints = pts;
+        if (currentPoints > sessionAvg) notifyObservers();
+    }
+
+    public String getName() { return name; }
+    public int getCurrentPoints() { return currentPoints; }
+}
+
+class Fan implements Observer {
+    private String fanName;
+    public Fan(String fanName) { this.fanName = fanName; }
+    public void update(Player p) {
+        System.out.println("Player " + p.getName() +
+            " exceeded session avg with " + p.getCurrentPoints() + " pts!");
+    }
+}
+
+// Usage
+Player player = new Player("Ronaldo");
+player.attach(new Fan("Ahmed"));
+player.attach(new Fan("Sara"));
+player.setCurrentPoints(50); // both fans notified</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">State</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Object changes behavior when its internal state changes</div>
+    <pre>interface VendingState {
+    void insertCoin(VendingMachine m);
+    void pressButton(VendingMachine m);
+}
+
+class IdleState implements VendingState {
+    public void insertCoin(VendingMachine m) {
+        System.out.println("Coin accepted");
+        m.setState(new HasMoneyState());
+    }
+    public void pressButton(VendingMachine m) {
+        System.out.println("Please insert coin first");
+    }
+}
+
+class HasMoneyState implements VendingState {
+    public void insertCoin(VendingMachine m) {
+        System.out.println("Coin already inserted");
+    }
+    public void pressButton(VendingMachine m) {
+        System.out.println("Dispensing item...");
+        m.setState(new IdleState());
+    }
+}
+
+class VendingMachine {
+    private VendingState state = new IdleState();
+    public void setState(VendingState s) { state = s; }
+    public void insertCoin() { state.insertCoin(this); }
+    public void pressButton() { state.pressButton(this); }
+}
+
+// Usage
+VendingMachine vm = new VendingMachine();
+vm.pressButton();  // Please insert coin first
+vm.insertCoin();   // Coin accepted
+vm.pressButton();  // Dispensing item...</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Strategy</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Interchangeable algorithms — select at runtime, no if/else</div>
+    <pre>interface PaymentStrategy {
+    void pay(double amount);
+}
+
+class CreditCardPayment implements PaymentStrategy {
+    public void pay(double amount) {
+        System.out.println("Paid $" + amount + " by Credit Card");
+    }
+}
+class PayPalPayment implements PaymentStrategy {
+    public void pay(double amount) {
+        System.out.println("Paid $" + amount + " via PayPal");
+    }
+}
+class CashPayment implements PaymentStrategy {
+    public void pay(double amount) {
+        System.out.println("Paid $" + amount + " in Cash");
+    }
+}
+
+class OrderProcessor {
+    private PaymentStrategy strategy;
+
+    public OrderProcessor(PaymentStrategy strategy) {
+        this.strategy = strategy;
+    }
+    public void setStrategy(PaymentStrategy s) { this.strategy = s; }
+
+    public void processOrder(double total) {
+        strategy.pay(total); // no if/else needed
+    }
+}
+
+// Usage — swap strategy without changing OrderProcessor
+OrderProcessor processor = new OrderProcessor(new CreditCardPayment());
+processor.processOrder(99.99); // Paid by Credit Card
+processor.setStrategy(new PayPalPayment());
+processor.processOrder(49.99); // Paid via PayPal</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Template Method</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Parent fixes the algorithm skeleton — subclasses override specific steps</div>
+    <pre>abstract class ReportGenerator {
+    // Template method — defines fixed order
+    public final void generateReport() {
+        fetchData();
+        calculateMetrics();
+        formatOutput();
+        saveFile();
+    }
+
+    protected void fetchData() {
+        System.out.println("Fetching data from DB...");
+    }
+
+    // This step varies — subclasses override it
+    protected abstract void calculateMetrics();
+
+    protected void formatOutput() {
+        System.out.println("Formatting output...");
+    }
+    protected void saveFile() {
+        System.out.println("Saving report file...");
+    }
+}
+
+class SalesReport extends ReportGenerator {
+    protected void calculateMetrics() {
+        System.out.println("Calculating total sales revenue");
+    }
+}
+
+class InventoryReport extends ReportGenerator {
+    protected void calculateMetrics() {
+        System.out.println("Calculating stock levels and turnover");
+    }
+}
+
+// Usage — same fixed flow, different calculation
+new SalesReport().generateReport();
+new InventoryReport().generateReport();</pre>
+  </div>
+</div>
+
+<div class="p-card">
+  <div class="p-header" onclick="toggle(this)">
+    <span class="p-title">Visitor</span>
+    <span style="display:flex;align-items:center;gap:8px;"><span class="p-badge b-bh">Behavioral</span><i class="ti ti-chevron-down chevron"></i></span>
+  </div>
+  <div class="p-body">
+    <div class="intent-line">Add new operations to objects without modifying their classes</div>
+    <pre>interface DocumentElement {
+    void accept(DocumentVisitor visitor);
+}
+
+class Paragraph implements DocumentElement {
+    public String text;
+    public Paragraph(String t) { text = t; }
+    public void accept(DocumentVisitor v) { v.visit(this); }
+}
+class Image implements DocumentElement {
+    public String src;
+    public Image(String s) { src = s; }
+    public void accept(DocumentVisitor v) { v.visit(this); }
+}
+
+interface DocumentVisitor {
+    void visit(Paragraph p);
+    void visit(Image img);
+}
+
+// New operation — HTML export — without changing Paragraph or Image
+class HtmlExportVisitor implements DocumentVisitor {
+    public void visit(Paragraph p) {
+        System.out.println("&lt;p&gt;" + p.text + "&lt;/p&gt;");
+    }
+    public void visit(Image img) {
+        System.out.println("&lt;img src='" + img.src + "'/&gt;");
+    }
+}
+
+// Usage
+List&lt;DocumentElement&gt; doc = List.of(
+    new Paragraph("Hello World"),
+    new Image("photo.png")
+);
+DocumentVisitor exporter = new HtmlExportVisitor();
+for (DocumentElement el : doc) el.accept(exporter);</pre>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+function showCat(cat, btn) {
+  document.getElementById('cat-cr').style.display = 'none';
+  document.getElementById('cat-st').style.display = 'none';
+  document.getElementById('cat-bh').style.display = 'none';
+  document.getElementById('cat-' + cat).style.display = 'flex';
+
+  document.querySelectorAll('.cat-tab').forEach(t => {
+    t.className = 'cat-tab';
+  });
+  const map = {cr:'active-cr', st:'active-st', bh:'active-bh'};
+  btn.classList.add(map[cat]);
+}
+</script>
